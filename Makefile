@@ -1,4 +1,4 @@
-API_SERVER_BINARY=player_rest_server
+API_SERVER_BINARY=player_server
 
 .PHONY : tidy
 .PHONY : build

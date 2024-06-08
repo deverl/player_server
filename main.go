@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"player_rest_server/db"
-	"player_rest_server/routes"
+	"player_server/db"
+	"player_server/routes"
 
 	"github.com/gin-gonic/gin"
 )

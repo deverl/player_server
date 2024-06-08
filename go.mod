@@ -1,4 +1,4 @@
-module player_rest_server
+module player_server
 
 go 1.22.4
 

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"player_rest_server/db"
+	"player_server/db"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

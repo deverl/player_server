@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"player_rest_server/utils"
+	"player_server/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "modernc.org/sqlite"
@@ -63,7 +63,7 @@ func init() {
 
 	if db == nil || err != nil {
 		waitTime := 1
-		maxWaitTime := 30
+		maxWaitTime := 60
 		for (db == nil || err != nil) && waitTime < maxWaitTime {
 			fmt.Printf("ERROR: Database connection not ready... retrying in %d seconds\n", waitTime)
 			time.Sleep(time.Duration(waitTime) * time.Second)
