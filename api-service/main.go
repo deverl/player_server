@@ -54,6 +54,8 @@ func main() {
 
 func populateDB(csvPath string) {
 	// Check every minute.
-	time.Sleep(60 * time.Second)
-	db.PopulatePlayer(csvPath)
+	for {
+		time.Sleep(60 * time.Second)
+		db.PopulatePlayer(csvPath)
+	}
 }
