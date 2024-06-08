@@ -42,6 +42,19 @@ The default `page_size` is 250. The max `page_size` is 1000.
 
 Paging is only used if the `page` query parameter is present and valid. In other words, specifying `page_size` without `page` has no effect.
 
+### Makefile
+
+You can use the makefile to build the Docker container and start it. Here are some of the make commands you can use.
+
+```
+make up_build                 # Builds the executables, composes a Docker image, and starts it in Docker
+
+make down                     # Stops the Docker images
+
+make up                       # Does docker-compose up -d without building executables
+```
+
+
 #### Database
 
 If you run the solution in Docker, you will be using a MariaDB instance in the container. Otherwise, a local MySQL database should be running with a tabled named `rest_server`. There should be a user named `rest_api_user` with password `rest_api_pw`, and this user should have all privileges on the `rest_server.*`.
@@ -55,3 +68,5 @@ The database data is stored in `./data.nobackup`. That directory will be created
 - For a production service, some validation of the input csv data should be added.
 
 - There are currently no unit or integration tests.
+
+- I've been unsuccessful in mounting the csv directory into the container as of yet. So, the Player.csv file is just copied into the container. The code checks every minute for a change in the file (and updates the DB if a change is detected), but it will never be triggered because of the static csv file in the container.
