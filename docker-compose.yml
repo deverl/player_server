@@ -35,7 +35,7 @@ services:
       MYSQL_USER: rest_api_user
       MYSQL_PASSWORD: rest_api_pw
     volumes:
-      - ./data:/var/lib/mysql
+      - ./data.nobackup:/var/lib/mysql
     # ports:
     #   - "3306:3306"
 

@@ -4,3 +4,4 @@ player_db
 player_rest_server
 player_server
 data/
+data.nobackup/

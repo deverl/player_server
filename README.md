@@ -38,32 +38,20 @@ curl -s 'http://localhost:8800/api/players?page=3&page_size=1000'
 ```
 Obviously, you can use postman or whatever tool you prefer to query endpoints.
 
-The default page size is 250.
+The default `page_size` is 250. The max `page_size` is 1000.
 
-Paging is only used if the `page` query parameter is present and valid.
+Paging is only used if the `page` query parameter is present and valid. In other words, specifying `page_size` without `page` has no effect.
 
 #### Database
 
-If you run the solution in Docker, you will be using a MariaDB instance in the container.
+If you run the solution in Docker, you will be using a MariaDB instance in the container. Otherwise, a local MySQL database should be running with a tabled named `rest_server`. There should be a user named `rest_api_user` with password `rest_api_pw`, and this user should have all privileges on the `rest_server.*`.
 
-If you run the code outside of Docker, you will be using a sqlite3 database (by default).
-
-You can choose to use a local instance of MySQL or MariaDB by running the code like this:
-
-```
-USE_MYSQL=1 go run ./...
-```
-
-or
-
-```
-go build
-USE_MYSQL=1 ./player_server
-```
-
-#### Unit Tests
-There are currently no unit or integration tests.
+The database data is stored in `./data.nobackup`. That directory will be created if it doesn't exist when the docker container is started.
 
 ### Opportunities for Improvement
 
-The DB population code, and the translation from a DB record to a Player object could be much more elegant. There are probably some packages available to make this very slick and clean, but a more brute-force approach is currently embodied.
+- Translation from a DB record to a Player object could be much more elegant. There are probably some packages available to make this very slick and clean, but a more brute-force approach is currently embodied.
+
+- For a production service, some validation of the input csv data should be added.
+
+- There are currently no unit or integration tests.
