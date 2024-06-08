@@ -42,7 +42,7 @@ stop:
 
 clean: down
 	@echo "deleting linux binaries..."
-	rm -f ${API_SERVER_BINARY}
+	cd api-service && rm -f ${API_SERVER_BINARY}
 
 clean_image:
 	@echo "deleting docker image..."

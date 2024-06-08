@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS config (
 
 -- INSERT INTO config (id, fileHash) VALUES (1, "");:
 
-LOAD DATA LOCAL INFILE './csv/Player.csv' INTO TABLE players
+LOAD DATA LOCAL INFILE '../api-service/csv/Player.csv' INTO TABLE players
 FIELDS TERMINATED BY ',' 
  OPTIONALLY ENCLOSED BY '"'
  ESCAPED BY '"'
