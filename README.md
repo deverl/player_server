@@ -1,4 +1,4 @@
-## Player DB
+## Player Server
 
 ### Overview
 This repo contains one possible implementation of a rest server that populates a DB from a csv file and serves data from the database on two endpoints.
@@ -42,7 +42,6 @@ The default page size is 250.
 
 Paging is only used if the `page` query parameter is present and valid.
 
-
 #### Database
 
 If you run the solution in Docker, you will be using a MariaDB instance in the container.
@@ -59,8 +58,11 @@ or
 
 ```
 go build
-USE_MYSQL=1 ./player_rest_server
+USE_MYSQL=1 ./player_server
 ```
+
+#### Unit Tests
+There are currently no unit or integration tests.
 
 ### Opportunities for Improvement
 
