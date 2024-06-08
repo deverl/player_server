@@ -86,9 +86,8 @@ func init() {
 func connect(useMysql bool) error {
 	var err error
 
-	DSN := os.Getenv("DSN")
-
 	if useMysql {
+		DSN := os.Getenv("DSN")
 		if DSN == "" {
 			username := "rest_api_user"
 			password := "rest_api_pw"
