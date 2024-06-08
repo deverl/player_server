@@ -59,7 +59,7 @@ or
 
 ```
 go build
-USE_MYSQL=1 player_rest_server
+USE_MYSQL=1 ./player_rest_server
 ```
 
 ### Opportunities for Improvement
