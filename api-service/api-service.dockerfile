@@ -2,11 +2,8 @@ FROM alpine:latest
 
 RUN mkdir /app
 RUN mkdir /csv
-RUN mkdir /data
 
-COPY csv/Player.csv /csv
 COPY player_server /app
-
-ENV USE_MYSQL=1
+COPY csv/Player.csv /csv
 
 CMD [ "/app/player_server" ]

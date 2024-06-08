@@ -3,9 +3,13 @@ package utils
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
+	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func GetFileHash(path string) (string, error) {
@@ -40,4 +44,35 @@ func GetEnvVarAsBool(name string, defaultValue bool) bool {
 		return true
 	}
 	return defaultValue
+}
+
+func IntFromString(s string, defaultValue int) int {
+	n, err := strconv.Atoi(s)
+	if err != nil {
+		fmt.Printf("WARNING: Using default int value for '%s'\n", s)
+		n = defaultValue
+	}
+	return n
+}
+
+func DateFromString(s string, defaultDate time.Time) time.Time {
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		fmt.Printf("WARNING: Using default date value for '%s'\n", s)
+		t = defaultDate
+	}
+	return t
+}
+
+func DoesFileExist(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return false
+		} else {
+			fmt.Println("ERROR: os.Stat() failed. err:", err)
+			return false
+		}
+	}
+	return true
 }

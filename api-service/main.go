@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 	"time"
 
 	"player_server/db"
@@ -11,12 +14,23 @@ import (
 )
 
 const (
-	csvPath = "./csv/Player.csv"
-	port    = 8800
+	csvRelativePath = "./csv/Player.csv"
+	port            = 8800
 )
 
 func main() {
 	fmt.Println("INFO: Starting api server")
+
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal("ERROR: Couldn't get working directory. err:", err)
+	}
+
+	fmt.Printf("INFO: Working directory: '%s'\n", dir)
+
+	csvPath := filepath.Join(dir, csvRelativePath)
+
+	fmt.Printf("INFO: csvPath: '%s'\n", csvPath)
 
 	if db.GetDB() == nil {
 		fmt.Println("ERROR: Database connection not ready... exiting")
@@ -31,14 +45,15 @@ func main() {
 
 	routes.RegisterRoutes(server)
 
-	go populateDB()
+	go populateDB(csvPath)
 
 	serverString := fmt.Sprintf(":%d", port)
 
 	server.Run(serverString)
 }
 
-func populateDB() {
-	time.Sleep(3600 * time.Hour)
+func populateDB(csvPath string) {
+	// Check every minute.
+	time.Sleep(60 * time.Second)
 	db.PopulatePlayer(csvPath)
 }

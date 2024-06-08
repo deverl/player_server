@@ -11,7 +11,7 @@ up:
 	docker-compose up -d
 	@echo "Docker images started!"
 
-build: build_api_server
+build: build_api_service
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
 up_build: build
@@ -27,18 +27,17 @@ down:
 	docker-compose down
 	@echo "Done!"
 
-## build_broker: builds the broker binary as a linux executable
-build_api_server:
+build_api_service:
 	@echo "Building api server binary..."
-	GOOS=linux CGO_ENABLED=0 go build -o ${API_SERVER_BINARY}
+	cd api-service && GOOS=linux CGO_ENABLED=0 go build -o ${API_SERVER_BINARY}
 	@echo "Done!"
 
 
-## stop: stop the Server
+## stop: stop the server
 stop:
-	@echo "Stopping api server..."
+	@echo "Stopping api service..."
 	@-pkill -SIGTERM -f "./${API_SERVER_BINARY}"
-	@echo "Stopped api server!"
+	@echo "Stopped api service!"
 
 
 clean: down

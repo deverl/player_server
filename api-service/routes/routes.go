@@ -36,24 +36,22 @@ func handlePlayers(ctx *gin.Context) {
 	if pageStr != "" {
 		page, err = strconv.Atoi(pageStr)
 		if err != nil {
-			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page: %s", pageStr)})
+			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("page must be an integer: '%s'", pageStr)})
 		}
-	}
-
-	if page < 0 {
-		ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page: %d", page)})
+		if page < 0 {
+			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page: %d", page)})
+		}
 	}
 
 	pageSizeStr := ctx.Query("page_size")
 	if pageSizeStr != "" {
 		pageSize, err = strconv.Atoi(pageSizeStr)
 		if err != nil {
-			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page_size: %s", pageSizeStr)})
+			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("page_size must be an integer: '%s'", pageSizeStr)})
 		}
-	}
-
-	if pageSize < 0 || pageSize > 10000 {
-		ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page_size: %d", pageSize)})
+		if pageSize < 0 || pageSize > 1000 {
+			ctx.JSON(http.StatusExpectationFailed, gin.H{"error": fmt.Sprintf("invalid value for page_size: %d", pageSize)})
+		}
 	}
 
 	fmt.Println("INFO: page:", page, "pageSize:", pageSize)
