@@ -27,10 +27,10 @@ The project builds a docker container (`make up_build`) and serves the API on po
 
 ```
 # Gets all players
-curl -s http://localhost:8800/api/players     
+curl -s http://localhost:8800/api/players
 
-# Gets one page (default is 250) players starting after the 5th page     
-curl -s http://localhost:8800/api/players?page=5   
+# Gets one page (default is 250) players starting after the 5th page
+curl -s http://localhost:8800/api/players?page=5
 
 # Gets one 1000 players starting after the 3rd page
 curl -s 'http://localhost:8800/api/players?page=3&page_size=1000'
@@ -47,11 +47,15 @@ Paging is only used if the `page` query parameter is present and valid. In other
 You can use the makefile to build the Docker container and start it. Here are some of the make commands you can use.
 
 ```
-make up_build                 # Builds the executables, composes a Docker image, and starts it in Docker
+make run         # Builds the executable and runs it
 
-make down                     # Stops the Docker images
+make runr        # Builds the executable and runs with gin in release mode
 
-make up                       # Does docker-compose up -d without building executables
+make up_build    # Builds the executables, composes a Docker image, and starts it in Docker
+
+make down        # Stops the Docker images
+
+make up          # Does docker-compose up -d without building executables
 ```
 
 
