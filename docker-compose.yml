@@ -20,6 +20,7 @@ services:
       #   target: /csv
       #   read_only: true
     environment:
+      - GIN_MODE=release
       - DSN=rest_api_user:rest_api_pw@tcp(db-service:3306)/rest_server?charset=utf8&parseTime=True&loc=Local
 
 
