@@ -52,3 +52,9 @@ clean_image:
 tidy:
 	@echo running tidy in authentication-service
 	go mod tidy
+
+run:
+	cd api-service && go build && ./${API_SERVER_BINARY}
+
+runr:
+	cd api-service && go build && GIN_MODE=release ./${API_SERVER_BINARY}
