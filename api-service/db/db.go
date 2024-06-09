@@ -140,7 +140,7 @@ func createTables() {
 
 func FetchPlayer(id string) (*Player, error) {
 	if isOffline {
-		return nil, errors.New("database is offline. Please try again")
+		return nil, errors.New("database is offline. Please try again later")
 	}
 
 	q := "SELECT * from players where playerId = ?"
@@ -168,7 +168,7 @@ func FetchPlayer(id string) (*Player, error) {
 
 func FetchPlayers(page int, pageSize int) ([]*Player, error) {
 	if isOffline {
-		return nil, errors.New("database is offline. Please try again")
+		return nil, errors.New("database is offline. Please try again later")
 	}
 
 	q := "SELECT * from players"
@@ -232,29 +232,11 @@ func updateFileHash(hash string) error {
 	return nil
 }
 
-func disableIndexingOnTable(tableName string) error {
-	if tableName == "" {
-		return errors.New("invalid argument. tableName must be provided")
-	}
-	q := fmt.Sprintf("ALTER TABLE `%s` DISABLE KEYS", tableName)
-	_, err := db.Exec(q)
-	return err
-}
-
-func enableIndexingOnTable(tableName string) error {
-	if tableName == "" {
-		return errors.New("invalid argument. tableName must be provided")
-	}
-	q := fmt.Sprintf("ALTER TABLE `%s` ENABLE KEYS", tableName)
-	_, err := db.Exec(q)
-	return err
-}
-
 func dropTable(tableName string) error {
 	if tableName == "" {
 		return errors.New("invalid argument. tableName must be provided")
 	}
-	q := fmt.Sprintf("DROP TABLE `%s`", tableName)
+	q := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", tableName)
 	_, err := db.Exec(q)
 	return err
 }
@@ -270,7 +252,7 @@ func doDataLoad(path string, tableName string) error {
 	goSql.RegisterLocalFile(path)
 
 	q := fmt.Sprintf(`LOAD DATA LOCAL INFILE '%s' INTO TABLE %s
-		FIELDS TERMINATED BY ',' 
+		FIELDS TERMINATED BY ','
 		OPTIONALLY ENCLOSED BY '"'
 		ESCAPED BY '"'
 		LINES TERMINATED BY '\n'
@@ -297,7 +279,7 @@ func PopulatePlayer(path string) error {
 		prevHash = ""
 	}
 
-	if hash == prevHash {
+	if hash != "" && hash == prevHash {
 		fmt.Println("INFO: File hash has not changed. Not updating.")
 		return nil
 	}
@@ -306,13 +288,7 @@ func PopulatePlayer(path string) error {
 
 	isOffline = true
 
-	startTime := time.Now().Unix()
-
-	// Turn off indexing on players
-	err = disableIndexingOnTable("players")
-	if err != nil {
-		fmt.Println("ERROR: disableIndexingOnTable failed. err:", err)
-	}
+	startTime := time.Now().UnixMilli()
 
 	// Drop table players
 	err = dropTable("players")
@@ -320,7 +296,7 @@ func PopulatePlayer(path string) error {
 		fmt.Println("ERROR: dropTable failed. err:", err)
 	}
 
-	// Recreate the players table
+	// Ensure that the players table exists.
 	createTables()
 
 	// Do mysql data load
@@ -332,13 +308,7 @@ func PopulatePlayer(path string) error {
 	// Allow requests again at this point.
 	isOffline = false
 
-	// Turn on indexing on players
-	err = enableIndexingOnTable("players")
-	if err != nil {
-		fmt.Println("ERROR: enableIndexingOnTable failed. err:", err)
-	}
-
-	endTime := time.Now().Unix()
+	endTime := time.Now().UnixMilli()
 	elapsedTime := endTime - startTime
 
 	// Update file hash in our config
@@ -348,7 +318,7 @@ func PopulatePlayer(path string) error {
 		return err
 	}
 
-	fmt.Printf(" done in %d seconds\n.", elapsedTime)
+	fmt.Printf(" done in %d ms.\n", elapsedTime)
 
 	return nil
 }

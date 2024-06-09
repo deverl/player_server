@@ -1,3 +1,8 @@
+#!/bin/bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+cat <<EOF > /tmp/load_players.sql
 USE rest_server;
 
 DROP TABLE IF EXISTS players;
@@ -36,9 +41,17 @@ CREATE TABLE IF NOT EXISTS config (
 
 -- INSERT INTO config (id, fileHash) VALUES (1, "");:
 
-LOAD DATA LOCAL INFILE '../api-service/csv/Player.csv' INTO TABLE players
-FIELDS TERMINATED BY ',' 
+LOAD DATA LOCAL INFILE '${SCRIPT_DIR}/../api-service/csv/Player.csv' INTO TABLE players
+FIELDS TERMINATED BY ','
  OPTIONALLY ENCLOSED BY '"'
  ESCAPED BY '"'
  LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
+SHOW TABLES;
+
+SELECT count(*) as num_players FROM players;
+
+EOF
+
+mysql -urest_api_user -prest_api_pw < /tmp/load_players.sql
