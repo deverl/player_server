@@ -54,11 +54,10 @@ func init() {
 
 	if db == nil || err != nil {
 		waitTime := 1
-		maxWaitTime := 60
+		maxWaitTime := 16
 		for (db == nil || err != nil) && waitTime < maxWaitTime {
-			log.Printf("ERROR: Database connection not ready... retrying in %d seconds\n", waitTime)
+			log.Printf("ERROR: Database connection not ready... retrying in %d second\n", waitTime)
 			time.Sleep(time.Duration(waitTime) * time.Second)
-			waitTime *= 2
 			err = connect()
 		}
 	}
