@@ -19,25 +19,23 @@ const (
 )
 
 func main() {
-	fmt.Println("INFO: Starting api server")
+	log.Println("INFO: Starting api server")
 
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal("ERROR: Couldn't get working directory. err:", err)
 	}
 
-	fmt.Printf("INFO: Working directory: '%s'\n", dir)
+	log.Printf("INFO: Working directory: '%s'\n", dir)
 
 	csvPath := filepath.Join(dir, csvRelativePath)
 
-	fmt.Printf("INFO: csvPath: '%s'\n", csvPath)
+	log.Printf("INFO: csvPath: '%s'\n", csvPath)
 
 	if db.GetDB() == nil {
-		fmt.Println("ERROR: Database connection not ready... exiting")
+		log.Println("ERROR: Database connection not ready... exiting")
 		return
 	}
-
-	fmt.Println("INFO: Populating the player database")
 
 	db.PopulatePlayer(csvPath)
 

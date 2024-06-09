@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"io"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -49,7 +49,7 @@ func GetEnvVarAsBool(name string, defaultValue bool) bool {
 func IntFromString(s string, defaultValue int) int {
 	n, err := strconv.Atoi(s)
 	if err != nil {
-		fmt.Printf("WARNING: Using default int value for '%s'\n", s)
+		log.Printf("WARNING: Using default int value for '%s'\n", s)
 		n = defaultValue
 	}
 	return n
@@ -58,7 +58,7 @@ func IntFromString(s string, defaultValue int) int {
 func DateFromString(s string, defaultDate time.Time) time.Time {
 	t, err := time.Parse("2006-01-02", s)
 	if err != nil {
-		fmt.Printf("WARNING: Using default date value for '%s'\n", s)
+		log.Printf("WARNING: Using default date value for '%s'\n", s)
 		t = defaultDate
 	}
 	return t
@@ -70,7 +70,7 @@ func DoesFileExist(path string) bool {
 		if errors.Is(err, os.ErrNotExist) {
 			return false
 		} else {
-			fmt.Println("ERROR: os.Stat() failed. err:", err)
+			log.Println("ERROR: os.Stat() failed. err:", err)
 			return false
 		}
 	}

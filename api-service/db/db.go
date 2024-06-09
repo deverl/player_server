@@ -56,7 +56,7 @@ func init() {
 		waitTime := 1
 		maxWaitTime := 60
 		for (db == nil || err != nil) && waitTime < maxWaitTime {
-			fmt.Printf("ERROR: Database connection not ready... retrying in %d seconds\n", waitTime)
+			log.Printf("ERROR: Database connection not ready... retrying in %d seconds\n", waitTime)
 			time.Sleep(time.Duration(waitTime) * time.Second)
 			waitTime *= 2
 			err = connect()
@@ -66,6 +66,8 @@ func init() {
 	if db == nil {
 		log.Fatal("ERROR: Could not connect to the database")
 	}
+
+	log.Println("INFO: The database is connected")
 
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)
@@ -86,7 +88,7 @@ func connect() error {
 	}
 	db, err = sql.Open("mysql", DSN)
 	if err != nil {
-		fmt.Println("INFO: Database not connected. err:", err)
+		log.Println("INFO: Database not connected. err:", err)
 	}
 
 	return db.Ping()
@@ -146,7 +148,7 @@ func FetchPlayer(id string) (*Player, error) {
 	q := "SELECT * from players where playerId = ?"
 	rows, err := db.Query(q, id)
 	if err != nil {
-		fmt.Println("ERROR: Can't fetch player. err:", err)
+		log.Println("ERROR: Can't fetch player. err:", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -176,10 +178,10 @@ func FetchPlayers(page int, pageSize int) ([]*Player, error) {
 		offset := (page - 1) * pageSize
 		q += fmt.Sprintf(" LIMIT %d, %d", offset, pageSize)
 	}
-	fmt.Printf("INFO: FetchPlayers: q = '%s'\n", q)
+	log.Printf("INFO: FetchPlayers: q = '%s'\n", q)
 	rows, err := db.Query(q)
 	if err != nil {
-		fmt.Println("ERROR: Can't fetch players. err:", err)
+		log.Println("ERROR: Can't fetch players. err:", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -270,7 +272,7 @@ func PopulatePlayer(path string) error {
 
 	hash, err := utils.GetFileHash(path)
 	if err != nil {
-		fmt.Println("ERROR: Couldn't calculate file hash. err:", err)
+		log.Println("ERROR: Couldn't calculate file hash. err:", err)
 		return err
 	}
 
@@ -280,11 +282,11 @@ func PopulatePlayer(path string) error {
 	}
 
 	if hash != "" && hash == prevHash {
-		fmt.Println("INFO: File hash has not changed. Not updating.")
+		log.Println("INFO: File hash has not changed. Not updating.")
 		return nil
 	}
 
-	fmt.Print("INFO: Populating player database...")
+	log.Println("INFO: Populating player database.")
 
 	isOffline = true
 
@@ -293,7 +295,7 @@ func PopulatePlayer(path string) error {
 	// Drop table players
 	err = dropTable("players")
 	if err != nil {
-		fmt.Println("ERROR: dropTable failed. err:", err)
+		log.Println("ERROR: dropTable failed. err:", err)
 	}
 
 	// Ensure that the players table exists.
@@ -302,7 +304,7 @@ func PopulatePlayer(path string) error {
 	// Do mysql data load
 	err = doDataLoad(path, "players")
 	if err != nil {
-		fmt.Println("ERROR: doDataLoad failed. err:", err)
+		log.Println("ERROR: doDataLoad failed. err:", err)
 	}
 
 	// Allow requests again at this point.
@@ -314,11 +316,11 @@ func PopulatePlayer(path string) error {
 	// Update file hash in our config
 	err = updateFileHash(hash)
 	if err != nil {
-		fmt.Println("ERROR: Could not update file hash. err:", err)
+		log.Println("ERROR: Could not update file hash. err:", err)
 		return err
 	}
 
-	fmt.Printf(" done in %d ms.\n", elapsedTime)
+	log.Printf("INFO: done populating database in %d ms.\n", elapsedTime)
 
 	return nil
 }

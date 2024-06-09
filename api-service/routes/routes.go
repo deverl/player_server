@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -31,7 +32,7 @@ func handlePlayers(ctx *gin.Context) {
 	page := -1
 	pageSize := 250
 
-	fmt.Println("INFO: Handling request for all players")
+	log.Println("INFO: Handling request for all players")
 	pageStr := ctx.Query("page")
 	if pageStr != "" {
 		page, err = strconv.Atoi(pageStr)
@@ -54,7 +55,7 @@ func handlePlayers(ctx *gin.Context) {
 		}
 	}
 
-	fmt.Println("INFO: page:", page, "pageSize:", pageSize)
+	log.Println("INFO: page:", page, "pageSize:", pageSize)
 
 	players, err := db.FetchPlayers(page, pageSize)
 	if err != nil {
@@ -65,7 +66,7 @@ func handlePlayers(ctx *gin.Context) {
 
 func handlePlayer(ctx *gin.Context) {
 	playerId := ctx.Param("player_id")
-	fmt.Println("INFO: Handling request for player ID", playerId)
+	log.Println("INFO: Handling request for player ID", playerId)
 	player, err := db.FetchPlayer(playerId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
