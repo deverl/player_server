@@ -63,7 +63,7 @@ make up          # Does docker-compose up -d without building executables
 
 If you run the solution in Docker, you will be using a MariaDB instance in the container. Otherwise, a local MySQL database should be running with a table named `rest_server`. There should be a user named `rest_api_user` with password `rest_api_pw`, and this user should have all privileges on the `rest_server` database.
 
-The database data is stored in `./data.nobackup`. That directory will be created if it doesn't exist when the docker container is started.
+When running in Docker, the database data is stored in `./data.nobackup`. That directory will be created if it doesn't exist when the docker container is started.
 
 ### Opportunities for Improvement
 
